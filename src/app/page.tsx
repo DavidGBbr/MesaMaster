@@ -14,12 +14,34 @@ export default function Home() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    let data = {
-      email,
-      password,
-    };
 
-    await signIn(data);
+    // Verifica se os campos de e-mail e senha estão preenchidos
+    if (email === "" || password === "") {
+      alert("Preencha os campos");
+      return;
+    }
+
+    // Exibe mensagem de carregamento enquanto o login está sendo processado
+    setLoading(true);
+
+    try {
+      let data = {
+        email,
+        password,
+      };
+
+      await signIn(data);
+
+      setEmail("");
+      setPassword("");
+    } catch (error) {
+      console.error("Erro de login:", error.message);
+      alert(
+        "Ocorreu um erro durante o login. Por favor, tente novamente mais tarde."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,7 +61,7 @@ export default function Home() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button loading={false} type="submit">
+          <Button loading={loading} type="submit">
             Acessar
           </Button>
         </form>

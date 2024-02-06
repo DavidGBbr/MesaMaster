@@ -14,10 +14,17 @@ interface SignInProps {
   password: string;
 }
 
+interface SignUpProps {
+  name: string;
+  email: string;
+  password: string;
+}
+
 interface AuthContextData {
   user: UserProps;
   isAuthenticated: boolean;
   signIn: (credentials: SignInProps) => Promise<void>;
+  signUp: (credentials: SignUpProps) => Promise<void>;
   signOut: () => void;
 }
 
@@ -60,8 +67,19 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
+  const signUp = async ({ name, email, password }: SignUpProps) => {
+    try {
+      const response = await api.post("/users", { name, email, password });
+      window.location.href = "/";
+    } catch (error) {
+      console.log("Erro ao cadastrar: " + error);
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, signIn, signOut }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, signIn, signUp, signOut }}
+    >
       {children}
     </AuthContext.Provider>
   );

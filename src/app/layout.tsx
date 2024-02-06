@@ -6,7 +6,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mesa Master - Faça seu login",
+  title: "Mesa Master",
 };
 
 export default function RootLayout({
