@@ -4,6 +4,7 @@ import { Input } from "@/components/input";
 import { AuthContext } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { FormEvent, useContext, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -17,7 +18,7 @@ export default function SignUp() {
     e.preventDefault();
 
     if (name === "" || email === "" || password === "") {
-      alert("Preencha os campos");
+      toast.error("Preencha todos os campos!");
       return;
     }
 
@@ -35,11 +36,6 @@ export default function SignUp() {
       setName("");
       setEmail("");
       setPassword("");
-    } catch (error) {
-      console.error("Erro de cadastrar:", error.message);
-      alert(
-        "Ocorreu um erro durante o cadastrar. Por favor, tente novamente mais tarde."
-      );
     } finally {
       setLoading(false);
     }

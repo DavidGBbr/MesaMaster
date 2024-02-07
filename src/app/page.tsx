@@ -4,6 +4,7 @@ import { Input } from "@/components/input";
 import { AuthContext } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { FormEvent, useContext, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -15,13 +16,11 @@ export default function Home() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // Verifica se os campos de e-mail e senha estão preenchidos
     if (email === "" || password === "") {
-      alert("Preencha os campos");
+      toast.error("Preencha os campos");
       return;
     }
 
-    // Exibe mensagem de carregamento enquanto o login está sendo processado
     setLoading(true);
 
     try {
@@ -34,11 +33,6 @@ export default function Home() {
 
       setEmail("");
       setPassword("");
-    } catch (error) {
-      console.error("Erro de login:", error.message);
-      alert(
-        "Ocorreu um erro durante o login. Por favor, tente novamente mais tarde."
-      );
     } finally {
       setLoading(false);
     }

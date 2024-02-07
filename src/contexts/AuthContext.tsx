@@ -2,6 +2,7 @@
 import { api } from "@/services/apiClient";
 import { destroyCookie, setCookie } from "nookies";
 import { PropsWithChildren, createContext, useState } from "react";
+import toast from "react-hot-toast";
 
 interface UserProps {
   id: string;
@@ -60,18 +61,21 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       });
 
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
-
+      toast.success("Usuário logado!");
       window.location.href = "/dashboard";
     } catch (error) {
+      toast.error("Erro ao fazer login!");
       console.log("Erro ao acessar: " + error);
     }
   };
 
   const signUp = async ({ name, email, password }: SignUpProps) => {
     try {
-      const response = await api.post("/users", { name, email, password });
+      await api.post("/users", { name, email, password });
+      toast.success("Usuário cadastrado!");
       window.location.href = "/";
     } catch (error) {
+      toast.error("Erro ao cadastra!");
       console.log("Erro ao cadastrar: " + error);
     }
   };
