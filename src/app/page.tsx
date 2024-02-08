@@ -33,6 +33,7 @@ export default function Home() {
 
       setEmail("");
       setPassword("");
+      window.location.href = "/dashboard";
     } finally {
       setLoading(false);
     }

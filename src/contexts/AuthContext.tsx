@@ -62,7 +62,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
       api.defaults.headers["Authorization"] = `Bearer ${token}`;
       toast.success("Usuário logado!");
-      window.location.href = "/dashboard";
     } catch (error) {
       toast.error("Erro ao fazer login!");
       console.log("Erro ao acessar: " + error);
@@ -75,7 +74,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       toast.success("Usuário cadastrado!");
       window.location.href = "/";
     } catch (error) {
-      toast.error("Erro ao cadastra!");
+      toast.error("Erro ao cadastrar!");
       console.log("Erro ao cadastrar: " + error);
     }
   };
