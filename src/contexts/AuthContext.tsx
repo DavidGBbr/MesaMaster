@@ -1,7 +1,7 @@
 "use client";
 import { api } from "@/services/apiClient";
-import { destroyCookie, setCookie } from "nookies";
-import { PropsWithChildren, createContext, useState } from "react";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
+import { PropsWithChildren, createContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 interface UserProps {
@@ -43,6 +43,25 @@ export const signOut = () => {
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [user, setUser] = useState<UserProps>();
   const isAuthenticated = !!user;
+
+  useEffect(() => {
+    const { "@nextauth.token": token } = parseCookies();
+
+    if (token) {
+      api
+        .get("/me")
+        .then((response) => {
+          const { id, name, email } = response.data;
+
+          setUser({
+            id,
+            name,
+            email,
+          });
+        })
+        .catch(() => signOut());
+    }
+  }, []);
 
   const signIn = async ({ email, password }: SignInProps) => {
     try {
