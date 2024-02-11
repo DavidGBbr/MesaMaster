@@ -7,6 +7,7 @@ export async function middleware(req: NextRequest) {
   const routes = {
     signInURL: new URL("/", req.url),
     dashboardURL: new URL("/dashboard", req.url),
+    categoryURL: new URL("/category", req.url),
   };
 
   if (token) {
@@ -25,5 +26,12 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard", "/dashboard/:path*", "/", "/signup"],
+  matcher: [
+    "/dashboard",
+    "/dashboard/:path*",
+    "/category",
+    "/category/:path*",
+    "/",
+    "/signup",
+  ],
 };

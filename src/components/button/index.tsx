@@ -9,7 +9,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = ({ children, loading, ...rest }: ButtonProps) => {
   return (
     <button
-      className={`max-w-xl bg-cta border-none p-2 text-white rounded-lg duration-200 hover:brightness-110 flex justify-center ${
+      className={`max-w-xl bg-cta border-none p-2 text-white rounded-lg duration-300 hover:brightness-110 flex justify-center ${
         loading && "cursor-not-allowed"
       }`}
       disabled={loading}
