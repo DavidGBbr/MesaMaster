@@ -1,7 +1,9 @@
 "use client";
 import Header from "@/components/header";
 import { Input } from "@/components/input";
+import { api } from "@/services/apiClient";
 import React, { FormEvent, useState } from "react";
+import toast from "react-hot-toast";
 
 const Category = () => {
   const [name, setName] = useState("");
@@ -9,7 +11,19 @@ const Category = () => {
   const handleRegister = async (e: FormEvent) => {
     e.preventDefault();
 
-    alert("Categoria: " + name);
+    if (name === "") {
+      toast.error("Preencha o nome da categoria");
+      return;
+    }
+
+    try {
+      await api.post("/category", { name });
+      toast.success("Categoria criada!");
+    } catch (error) {
+      console.log("Erro ao cadastrar: " + error);
+    } finally {
+      setName("");
+    }
   };
 
   return (
