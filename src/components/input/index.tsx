@@ -14,5 +14,10 @@ export const Input = ({ ...rest }: InputProps) => {
 };
 
 export const TextArea = ({ ...rest }: TextAreaProps) => {
-  return <textarea {...rest} />;
+  return (
+    <textarea
+      className="mb-4 h-32 rounded-lg bg-slate-950 text-white p-4 border-[1px] border-gray-600 placeholder:text-slate-300 resize-none"
+      {...rest}
+    />
+  );
 };

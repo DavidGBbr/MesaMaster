@@ -18,7 +18,11 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(routes.dashboardURL);
     }
   } else {
-    if (req.nextUrl.pathname.startsWith("/dashboard")) {
+    if (
+      req.nextUrl.pathname.startsWith("/dashboard") ||
+      req.nextUrl.pathname.startsWith("/category") ||
+      req.nextUrl.pathname.startsWith("/product")
+    ) {
       return NextResponse.redirect(routes.signInURL);
     }
   }
@@ -31,6 +35,8 @@ export const config = {
     "/dashboard/:path*",
     "/category",
     "/category/:path*",
+    "/product",
+    "/product/:path*",
     "/",
     "/signup",
   ],
