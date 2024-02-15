@@ -1,12 +1,29 @@
 "use client";
 import Header from "@/components/header";
 import { Input, TextArea } from "@/components/input";
-import React, { ChangeEvent, useState } from "react";
+import { api } from "@/services/apiClient";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { FiUpload } from "react-icons/fi";
+
+interface Category {
+  id: string;
+  name: string;
+}
 
 const Product = () => {
   const [avatarUrl, setAvatarUrl] = useState("");
   const [imageAvatar, setImageAvatar] = useState(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categorySelected, setCategorySelected] = useState(0);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const response = await api.get("/category");
+      setCategories(response.data);
+    };
+
+    getCategories();
+  }, []);
 
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) {
@@ -23,6 +40,11 @@ const Product = () => {
       setImageAvatar(image);
       setAvatarUrl(URL.createObjectURL(e.target.files[0]));
     }
+  };
+
+  const handleChangeCategory = (e) => {
+    console.log("Categoria selecionada:", e.target.value);
+    setCategorySelected(e.target.value);
   };
   return (
     <>
@@ -52,9 +74,16 @@ const Product = () => {
             )}
           </label>
 
-          <select className="mb-4 h-10 rounded-lg bg-slate-950 text-white py-0 px-2 border-[1px] border-gray-600 placeholder:text-slate-300">
-            <option>Acompanhamentos</option>
-            <option>Porções</option>
+          <select
+            className="mb-4 h-10 rounded-lg bg-slate-950 text-white py-0 px-2 border-[1px] border-gray-600 placeholder:text-slate-300"
+            value={categorySelected}
+            onChange={handleChangeCategory}
+          >
+            {categories.map((category, index) => (
+              <option key={category.id} value={index}>
+                {category.name}
+              </option>
+            ))}
           </select>
 
           <Input placeholder="Digite o nome do produto" />
