@@ -2,7 +2,8 @@
 import Header from "@/components/header";
 import { Input, TextArea } from "@/components/input";
 import { api } from "@/services/apiClient";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { FiUpload } from "react-icons/fi";
 
 interface Category {
@@ -11,8 +12,13 @@ interface Category {
 }
 
 const Product = () => {
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
+
   const [avatarUrl, setAvatarUrl] = useState("");
   const [imageAvatar, setImageAvatar] = useState(null);
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [categorySelected, setCategorySelected] = useState(0);
 
@@ -43,8 +49,42 @@ const Product = () => {
   };
 
   const handleChangeCategory = (e) => {
-    console.log("Categoria selecionada:", e.target.value);
     setCategorySelected(e.target.value);
+  };
+
+  const handleRegister = async (e: FormEvent) => {
+    e.preventDefault();
+    try {
+      const data = new FormData();
+
+      if (
+        name === "" ||
+        price === "" ||
+        description === "" ||
+        imageAvatar === null
+      ) {
+        toast.error("Preencha todos os campos");
+        return;
+      }
+
+      data.append("name", name);
+      data.append("price", price);
+      data.append("description", description);
+      data.append("category_id", categories[categorySelected].id);
+      data.append("file", imageAvatar);
+
+      await api.post("/product", data);
+      toast.success("Produto cadastrado com sucesso");
+    } catch (error) {
+      console.log(error);
+      toast.error("Erro ao cadastrar");
+    }
+
+    setName("");
+    setPrice("");
+    setDescription("");
+    setAvatarUrl("");
+    setImageAvatar(null);
   };
   return (
     <>
@@ -52,7 +92,7 @@ const Product = () => {
 
       <main className="max-w-3xl my-16 mx-auto py-0 px-8 flex justify-between flex-col">
         <h1 className="text-cta text-2xl font-bold">Novo produto</h1>
-        <form className="flex flex-col my-4 mx-0">
+        <form className="flex flex-col my-4 mx-0" onSubmit={handleRegister}>
           <label className="w-full h-72 bg-slate-950 mb-4 rounded-md flex justify-center items-center cursor-pointer">
             <span className="z-50 absolute opacity-70 transition-all duration-300 hover:opacity-100 hover:scale-125">
               <FiUpload size={30} color="#fff" />
@@ -86,10 +126,22 @@ const Product = () => {
             ))}
           </select>
 
-          <Input placeholder="Digite o nome do produto" />
-          <Input placeholder="Preço do produto" />
+          <Input
+            placeholder="Digite o nome do produto"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Input
+            placeholder="Preço do produto"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
 
-          <TextArea placeholder="Descrição do seu produto..." />
+          <TextArea
+            placeholder="Descrição do seu produto..."
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
 
           <button
             type="submit"
