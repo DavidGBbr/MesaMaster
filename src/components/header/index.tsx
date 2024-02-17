@@ -10,7 +10,7 @@ const Header = () => {
   return (
     <header className="h-20">
       <div className="max-w-6xl h-20 my-0 mx-auto py-0 px-8 flex justify-between items-center">
-        <Link href="d=/dashboard">
+        <Link href="/dashboard">
           <h2 className="font-mono font-bold text-white text-3xl tracking-tight cursor-pointer">
             Mesa<span className="text-cta">Master</span>
           </h2>
