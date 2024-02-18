@@ -1,7 +1,31 @@
+"use client";
 import Header from "@/components/header";
+import { api } from "@/services/apiClient";
+import { useEffect, useState } from "react";
 import { FiRefreshCcw } from "react-icons/fi";
 
+type OrderType = {
+  id: string;
+  table: string | number;
+  status: boolean;
+  draft: boolean;
+  name: string | null;
+};
+
 export default function Dashboard() {
+  const [orders, setOrders] = useState<OrderType[]>(null);
+
+  useEffect(() => {
+    const getOrders = async () => {
+      const response = await api.get("/orders");
+      setOrders(response.data);
+    };
+    getOrders();
+  }, []);
+
+  const handleOpenModalView = (id: string) => {
+    alert("Modal opened: " + id);
+  };
   return (
     <>
       <Header />
@@ -14,12 +38,20 @@ export default function Dashboard() {
         </div>
 
         <article className="flex flex-col my-4 mx-0">
-          <section className="flex flex-row bg-slate-950 mb-4 items-center rounded-lg">
-            <button className="h-14 border-none bg-transparent text-xl text-white flex items-center">
-              <div className="w-2 bg-green-500 h-14 rounded-tl-lg rounded-bl-lg mr-4"></div>
-              <span>Mesa 1</span>
-            </button>
-          </section>
+          {orders?.map((order) => (
+            <section
+              key={order.id}
+              className="flex flex-row bg-slate-950 mb-4 items-center rounded-lg"
+            >
+              <button
+                className="h-14 border-none bg-transparent w-full text-xl text-white flex items-center"
+                onClick={() => handleOpenModalView(order.id)}
+              >
+                <div className="w-2 bg-green-500 h-14 rounded-tl-lg rounded-bl-lg mr-4"></div>
+                <span>Mesa {order.table}</span>
+              </button>
+            </section>
+          ))}
         </article>
       </main>
     </>
