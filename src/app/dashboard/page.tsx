@@ -1,8 +1,10 @@
 "use client";
 import Header from "@/components/header";
+import ModalOrder from "@/components/modal";
 import { api } from "@/services/apiClient";
 import { useEffect, useState } from "react";
 import { FiRefreshCcw } from "react-icons/fi";
+import Modal from "react-modal";
 
 type OrderType = {
   id: string;
@@ -12,8 +14,25 @@ type OrderType = {
   name: string | null;
 };
 
+export type OrderItemProps = {
+  id: string;
+  amount: number;
+  order_id: string;
+  product_id: string;
+  product: {
+    id: string;
+    name: string;
+    description: string;
+    price: string;
+    banner: string;
+  };
+  order: OrderType;
+};
+
 export default function Dashboard() {
   const [orders, setOrders] = useState<OrderType[]>(null);
+  const [modalItem, setModalItem] = useState<OrderItemProps[]>();
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const getOrders = async () => {
@@ -23,9 +42,20 @@ export default function Dashboard() {
     getOrders();
   }, []);
 
-  const handleOpenModalView = (id: string) => {
-    alert("Modal opened: " + id);
+  const handleOpenModalView = async (id: string) => {
+    const response = await api.get("/order/detail", {
+      params: { order_id: id },
+    });
+    setModalItem(response.data.orders);
+    setModalVisible(true);
   };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+  };
+
+  Modal.setAppElement(".vsc-initialized");
+
   return (
     <>
       <Header />
@@ -53,6 +83,13 @@ export default function Dashboard() {
             </section>
           ))}
         </article>
+        {modalVisible && (
+          <ModalOrder
+            isOpen={modalVisible}
+            onRequestClose={handleCloseModal}
+            order={modalItem}
+          />
+        )}
       </main>
     </>
   );
