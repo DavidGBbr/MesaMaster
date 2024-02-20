@@ -30,7 +30,7 @@ export type OrderItemProps = {
 };
 
 export default function Dashboard() {
-  const [orders, setOrders] = useState<OrderType[]>(null);
+  const [orders, setOrders] = useState<OrderType[]>([]);
   const [modalItem, setModalItem] = useState<OrderItemProps[]>();
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -54,7 +54,22 @@ export default function Dashboard() {
     setModalVisible(false);
   };
 
-  Modal.setAppElement(".vsc-initialized");
+  const handleFinishOrder = async (id: string) => {
+    await api.patch("/order/finish", {
+      order_id: id,
+    });
+
+    const response = await api.get("/orders");
+    setOrders(response.data);
+    setModalVisible(false);
+  };
+
+  const handleRefreshOrders = async () => {
+    const response = await api.get("/orders");
+    setOrders(response.data);
+  };
+
+  Modal.setAppElement("body");
 
   return (
     <>
@@ -62,12 +77,20 @@ export default function Dashboard() {
       <main className="max-w-3xl my-16 mx-auto py-0 px-8 flex justify-between flex-col">
         <div className="flex flex-row">
           <h1 className="text-cta text-2xl font-bold">Últimos pedidos</h1>
-          <button className="bg-transparent ml-4 border-none">
+          <button
+            className="bg-transparent ml-4 border-none"
+            onClick={handleRefreshOrders}
+          >
             <FiRefreshCcw size={25} color="#3fffa3" />
           </button>
         </div>
 
         <article className="flex flex-col my-4 mx-0">
+          {orders.length === 0 && (
+            <span className="text-xl text-gray-600">
+              Nenhum pedido aberto foi encontrado...
+            </span>
+          )}
           {orders?.map((order) => (
             <section
               key={order.id}
@@ -88,6 +111,7 @@ export default function Dashboard() {
             isOpen={modalVisible}
             onRequestClose={handleCloseModal}
             order={modalItem}
+            handleFinishOrder={handleFinishOrder}
           />
         )}
       </main>

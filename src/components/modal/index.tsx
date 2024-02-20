@@ -6,9 +6,15 @@ interface ModalOrderProps {
   isOpen: boolean;
   onRequestClose: () => void;
   order: OrderItemProps[];
+  handleFinishOrder: (id: string) => void;
 }
 
-const ModalOrder = ({ isOpen, onRequestClose, order }: ModalOrderProps) => {
+const ModalOrder = ({
+  isOpen,
+  onRequestClose,
+  order,
+  handleFinishOrder,
+}: ModalOrderProps) => {
   const customStyles = {
     content: {
       top: "50%",
@@ -52,7 +58,9 @@ const ModalOrder = ({ isOpen, onRequestClose, order }: ModalOrderProps) => {
 
       <button
         className="mt-6 bg-[rgba(0,0,0,40%)] border-none py-2 px-4 rounded-md text-red-500"
-        onClick={() => {}}
+        onClick={() => {
+          handleFinishOrder(order[0]?.order.id);
+        }}
       >
         Concluir pedido
       </button>
